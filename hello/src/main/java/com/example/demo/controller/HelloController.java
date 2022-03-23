@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -41,12 +42,21 @@ public class HelloController {
 	
 	//수정
 	@GetMapping("/update")
-	public String update() {
+	public String update(UserDTO dto,Model model) {
+		
+		model.addAttribute("dto",dto);
 		
 		return "update";
 	}
 	
-	//update
+	//updatePro
+	@PostMapping("/updatePro")
+	public String updatePro(UserDTO dto) {
+		
+		service.update(dto);
+		
+		return "main";
+	}
 	
 	
 	//리스트

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +18,22 @@ public class UserService {
 	//findOne()	:primary key로 레코드 한건 찾기
 	//findAll()	:전체 레코드 불러오기, 정렬(sort), 페이징(pageable)가능
 	//count()	:레코드 갯수
-	//delete()	:레커드 삭제
+	//delete()	:레코드 삭제
 	
 	//저장
 	public void signup(UserDTO dto){ 
 		
-		UserRe.save(dto);
+		UserRe.save(dto);//저장
 
 	}
+	
+	//수정
+	public void update(UserDTO dto) {
+		
+		UserRe.save(dto);//저장
+		
+	}
+	
 	
 	//리스트
 	public List<UserDTO> list(){
@@ -33,6 +42,8 @@ public class UserService {
 		
 		return list;
 	}
+	
+
 	
 
 }

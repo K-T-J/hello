@@ -8,7 +8,6 @@
 </head>
 <body>
 	<button onclick="window.location='/signup'">가입</button>
-	<button onclick="window.location='/update'">수정</button>
 	<button onclick="window.location='/list'">리스트</button>
 </body>
 </html>
