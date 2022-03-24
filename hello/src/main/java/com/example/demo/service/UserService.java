@@ -28,9 +28,25 @@ public class UserService {
 	}
 	
 	//수정
-	public void update(UserDTO dto) {
+	public UserDTO update(int id) {
 		
-		UserRe.save(dto);//저장
+		
+		Optional<UserDTO> dto = UserRe.findById(id);
+		//findById()메서드는 조회하려는 값이 존재할 수도, 존재하지 않을수도 있어서 		
+		//null에 의한 오류를 최소화 하기 위해 리턴으로 Optional<T>를 받는다
+		/*
+		Optional에서 많이 사용하는 것 중 하나가 ifPresent() 메서드와 isPresent()메서드 이다.
+		ifPresent() :	1.특정 결과를 반환하지 않는다
+						2.Optional의 값이 존재할 경우에만 실행될 로직이 함수의 인자로 전달된다
+						3.함수형 인자로 람다식이 넘어올 수 있다.
+		
+		isPresent() :	1.특정 결과를 반환하지 않는다.
+						2.현재 Optional의 값이 null인지 확인한다.
+						3.if-else문을 사용하지 않고도 null값 존재 검사를 할 수 있다.
+		*/
+		return UserRe.findById(id).orElseGet(() -> null);
+		
+		
 		
 	}
 	

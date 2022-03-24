@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<UserDTO, Integer>{//JpaRep
 	//Spring Data JPA에서 제공하는 JpaRepository 인터페이스를 상속하기만 해도 되며,
 	//@Repository등의 어노테이션을 추가할 필요가 없다.
 	
+
+	
 }
