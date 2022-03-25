@@ -3,10 +3,16 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.UserDTO.UserDTO;
+import com.example.demo.UserDTO.UserVO;
 import com.example.demo.repository.UserRepository;
 
 @Service //서비스 레이어, 내부에서 자바 로직을 처리함
@@ -24,9 +30,14 @@ public class UserService {
 	public void signup(UserDTO dto){ 
 		
 		UserRe.save(dto);//저장
+		
+		//save함수는 id를 전달하지 않으면 insert를 해주고
+		//save함수는 id를 전달하면 해당 id에 대한 데이터가 있으면 update를 해주고
+		//save함수는 id를 전달하면 해당 id에 대한 데이터가 없으면 insert를 한다
+		
+		
 
 	}
-	
 	//수정
 	public UserDTO update(int id) {
 		
@@ -49,16 +60,51 @@ public class UserService {
 		
 		
 	}
+	//테스트 시작
+	@Transactional // 트랜잭션 함수종료시 자동 commit이됨
+	public void testupdate(UserVO vo) {
+		
+		//이때 영속화가 된다
+		UserDTO dto = UserRe.findById(vo.getId()).orElseThrow(()->{//orElseThrow 못찾는다면 어떤 함수를 실행해라 라는뜻이지만 
+																//자바는 파라미터에 함수를 넣을수 없지만 람다식을 이용해 바로 함수를 쓸수있다.
+			return new IllegalArgumentException("수정 실패");
+		});
+		
+		//영속화로 가져온 DB데이터와 지금 변경된 데이터를 비교해서 변경이 되었다고 인식하면 update를 수행한다.
+		dto.setPassword(vo.getPassword());
+		dto.setEmail(vo.getEmail());
+		
+	}
+	
+	//테스트 끝
 	
 	
 	//리스트
-	public List<UserDTO> list(){
+	public Page<UserDTO> list(Pageable pageable){
 		
-		List<UserDTO> list = UserRe.findAll();
+		Page<UserDTO> list = UserRe.findAll(pageable); //PageRequest.of(0, 0) 페이징 처리를 도와주는 JPA 
+		//list타입 리턴이 아니라 Page타입으로 리턴
 		
 		return list;
 	}
 	
+	//테스트 시작
+	public List<UserDTO> testList(){
+		
+		List<UserDTO> dto = UserRe.findAll();
+		
+		return dto;
+	}
+
+	public Page<UserDTO> pageList(Pageable pageable){
+		
+		Page<UserDTO> dto =UserRe.findAll(pageable);
+		
+		return dto;
+	}
+	
+	
+	//테스트 끝
 
 	
 
