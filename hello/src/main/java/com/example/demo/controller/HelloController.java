@@ -88,7 +88,7 @@ public class HelloController {
 		
 		int pageNumber = list.getPageable().getPageNumber(); //현제 페이지
 		int totalPages = list.getTotalPages();//총 페이지 수, 검색에 따라 달라짐
-		int pageBlock = 3; //블럭의 수 
+		int pageBlock = 3; //페이징 블럭의 수 
 		int startBlockPage = ((pageNumber)/pageBlock)*pageBlock+1; //(블럭의 수가 3개일경우,현재 페이지가 5페이지 일경우) : (5/3)*3+1 = 4 시작번호
 		int endBlockPage = startBlockPage+pageBlock-1; //시작번호가 4일경우 : 4+3-1 = 6 끝번호
 		System.out.println("endBlockPage1 : " +endBlockPage);

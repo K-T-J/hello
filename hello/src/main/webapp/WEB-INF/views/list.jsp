@@ -9,23 +9,15 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"><!-- bootstrap -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><!-- jquery -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> <!-- js -->
-
 <script type="text/javascript">
+
 //페이지 로딩될때
 $(document).ready(function() {
 	$("#update").hide();//페이지 로딩될때 안보이게 설정
 	$("#signup").hide();//페이지 로딩될때 안보이게 설정
- 	$("#userlist").show(function() {
-		$.ajax({
-			type : "get",
-			url : "userlist",
-			dataType : "json",//받는 데이터 타입
-			error : function(xhr, status, errer){//에러났을경우
-				alert(error);
-			},
-			success : function(data){resultHtml(data)}//성공했을경우 
-		});
-	});
+ 	$("#userlist").show() 
+	list(0);
+	
 });
 
 //페이지 이동될때
@@ -34,15 +26,27 @@ function list(data){
 		type : "get",
 		url : "userlist?page="+data, //페이지번호 같이 넘기기
 		dataType : "json",//받는 데이터 타입
-		error : function(xhr, status, errer){
+		error : function(jqXHR, textStatus, errorThrown){
 			alert(error);
+			/*
+			jqXHR.status : 500  : 오류번호를 출력한다.
+			jqXHR.statusText : "Internal Server Error" : 오류 내용 텍스트 ->errorThrown와 동일
+			jqXHR.responseText : url의 full response(아래 그림 참조) : url의 response ful text를 출력한다.
+			jqXHR.readyState : 4	: ajax readyState를 출력한다.
+			textStatus: error 고정출력 / errorThrown:inter Server Error, Not Found등 오류 메시지 출력
+			
+			1. jquery ajax의 error는 jqXHR, textStatus, errorThrown 의 세 가지 파라미터를 제공 한다.
+			2. error의 두 번째 인자 textStatus와 세 번째 인자 errorThrown는 굳이 사용할 일이 없을 것 같다
+			3. jqXHR.status는 http 오류 번호를 반환하며 케이스별 오류 메시지 판정에 사용하면 유용할 것 같다
+			2. jqXHR.responseText는 url의 full response를 반환하기 때문에 ajax 오류 디버깅 시에 상당한 도움을 줄 것이다.
+		*/	
 		},
-		success : function(data){resultHtml(data)}
+		success : function(data){resultHtml(data)}//성공했을경우 resultHtml 함수 호출
 	});
 	
 }
 
-
+//리스트,페이지 이동 ajax를 성공시 호출되는 함수
 function resultHtml(data){
 	//controller에서 넘어온 map 확인
 	/*
@@ -64,6 +68,7 @@ function resultHtml(data){
 		console.log("email : " + data.list[dto].email);
 		
 	}; */
+	
 	//변수에 담기
 	var Pageable = data.Pageable;
 	var Number = data.Number;
@@ -163,7 +168,7 @@ function onDisplay(data) {
 		 	var password = data["password"];// key값으로 꺼낸 value를 변수에 넣기
 		 	var email = data["email"];// key값으로 꺼낸 value를 변수에 넣기
 			
-		 	$("#id").val(id);//username이라는 id값에 value에 변수넣기
+		 	$("#id").val(id);//id라는 id값에 value에 변수넣기
 		 	$("#username").val(username);//username이라는 id값에 value에 변수넣기
 		 	$("#password").val(password);//password이라는 id값에 value에 변수넣기
 		 	$("#email").val(email);//email이라는 id값에 value에 변수넣기
@@ -178,7 +183,7 @@ function onSubmit() {
 		type : "post",
 		url : "submit",
 		data : formData,
-		error : function(xhr, status, errer){ //에러가 났을경우
+		error : function(jqXHR, textStatus, errorThrown ){ //에러가 났을경우
 			alert(error);
 		},
 		success : function(data) {
