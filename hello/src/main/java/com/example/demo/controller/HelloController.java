@@ -19,6 +19,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,24 +45,100 @@ public class HelloController {
 	}
 
 	//가입등록
+	@ResponseBody
 	@PostMapping("/submit")
-	public String submit(UserDTO dto) {
+	public void submit(UserDTO dto) {
 		service.signup(dto);
 		
-		return "main";
 	}
 	
 	//수정
 	@ResponseBody
 	@PostMapping("/update")
 	public void update(UserVO vo, Model model) {//만약 json타입으로 값이 넘어왔을경우@RequestBody를 사용하면 
-													//json데이터를 요청했을때 -> java object로 변환해서 받아준다(MessageConverter의 jackson라이브러리가 변환해줌)
-		service.testupdate(vo);
-		//model.addAttribute("dto",dto);
+												//json데이터를 요청했을때 -> java object로 변환해서 받아준다(MessageConverter의 jackson라이브러리가 변환해줌)
+		service.update(vo);
 		
 	}
 	
+	//삭제
+	@ResponseBody
+	@PostMapping("/delete")
+	public void delete(UserDTO dto) {
+		
+		service.userDelete(dto);
+	}
 	
+	
+	//ajax 리스트 테스트 시작
+	
+	@GetMapping("/list")
+	public String list() {
+
+		return "list";
+	}
+	
+	
+	@ResponseBody
+	@GetMapping("/userlist")
+	public Map<String, Object> userlist(@PageableDefault(page = 0,size = 3,sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		//page는 0이 1페이지를뜻함 size는 한페이지에 몇개를보여주는지 sort는 무엇을 기준으로 direction는 정렬
+		
+		Page<UserDTO> list = service.list(pageable);//페이지를 매개변수에 넣어 몇개를 리턴해올지 구한다.
+		
+		int pageNumber = list.getPageable().getPageNumber(); //현제 페이지
+		int totalPages = list.getTotalPages();//총 페이지 수, 검색에 따라 달라짐
+		int pageBlock = 3; //블럭의 수 
+		int startBlockPage = ((pageNumber)/pageBlock)*pageBlock+1; //(블럭의 수가 3개일경우,현재 페이지가 5페이지 일경우) : (5/3)*3+1 = 4 시작번호
+		int endBlockPage = startBlockPage+pageBlock-1; //시작번호가 4일경우 : 4+3-1 = 6 끝번호
+		System.out.println("endBlockPage1 : " +endBlockPage);
+		endBlockPage = totalPages<endBlockPage ? totalPages : endBlockPage;// 총페이지수가 끝번호보다 작으면 = 총페이지수 값이 끝번호가 된다.	
+																			// 총페이지수가 끝번호보다 클경우 = 끝번호 값이 끝번호가 된다.
+		//출력
+		System.out.println("isFirst : "+ list.isFirst());
+		System.out.println("getNumber : "+ list.getNumber());
+		System.out.println("isLast : "+ list.isLast());
+		System.out.println("getPageable,getPageNumber : " + list.getPageable().getPageNumber());
+		System.out.println("pageNumber : " +pageNumber);
+		System.out.println("totalPages : " +totalPages);
+		System.out.println("startBlockPage : " +startBlockPage);
+		System.out.println("endBlockPage2 : " + endBlockPage);
+		
+		//ajax 리턴하기 위해 map에 담기
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("Pageable", list.getPageable().getPageNumber());
+		map.put("Number", list.getNumber());
+		map.put("First", list.isFirst());
+		map.put("Last", list.isLast());
+		map.put("pageNumber", pageNumber);
+		map.put("totalPages", totalPages);
+		map.put("startBlockPage", startBlockPage);
+		map.put("endBlockPage", endBlockPage);
+		map.put("pageBlock", pageBlock);
+		
+		//Page<>리턴을 하면 ajax에서 인식을? 못하기때문에 List로 바꿔서 리턴
+		List<UserDTO> dto = list.getContent();
+		map.put("list", dto);//list도 map에 담기
+
+		return map;
+	}
+	//ajax 리스트 테스트 끝
+	
+	//유저 한명에 정보 가져오기
+	//ajax
+	//@RequestBody를 사용하면 json데이터를 요청했을때 -> java object로 변환해서 받아준다
+	@ResponseBody //view페이지가 아닌 변환값 그대로 클라이언트한테 return 하고 싶은 경우 사용
+	@RequestMapping("/modify")
+	public UserDTO modify(UserDTO dto,Model model) {
+		
+		int id = dto.getId();//dto로 받은 값을 꺼내 id변수에 넣기
+		dto = service.oneUser(id);//update매서드 재활용
+		
+		return dto;
+	}
+	
+	/*
+	//유저 리스트 (페이징)
 	@GetMapping("/list")
 	public String userlist(Model model,@PageableDefault(page = 0,size = 3,sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 		//page는 0이 1페이지를뜻함 size는 한페이지에 몇개를보여주는지 sort는 무엇을 기준으로 direction는 정렬
@@ -70,28 +147,28 @@ public class HelloController {
 		int pageNumber = list.getPageable().getPageNumber(); //현제 페이지
 		int totalPages = list.getTotalPages();//총 페이지 수, 검색에 따라 달라짐
 		int pageBlock = 3; //블럭의 수 
-		int startBlockPage = ((pageNumber)/pageBlock)*pageBlock+1; //현재 페이지가 7이라면 1*5 +1 = 6
-		int endBlockPage = startBlockPage+pageBlock-1; //6+5-1=10  6,7,8,9,10 해서 10
-		endBlockPage = totalPages<endBlockPage? totalPages : endBlockPage;
+		int startBlockPage = ((pageNumber)/pageBlock)*pageBlock+1; //(블럭의 수가 3개일경우,현재 페이지가 5페이지 일경우) : (5/3)*3+1 = 4 시작번호
+		int endBlockPage = startBlockPage+pageBlock-1; //시작번호가 4일경우 : 4+3-1 = 6 끝번호
+		System.out.println("endBlockPage1 : " +endBlockPage);
+		endBlockPage = totalPages<endBlockPage ? totalPages : endBlockPage;// 총페이지수가 끝번호보다 작으면 = 총페이지수 값이 끝번호가 된다.	
+																			// 총페이지수가 끝번호보다 클경우 = 끝번호 값이 끝번호가 된다.
+		
+		//출력
+	
+		System.out.println("pageNumber : " +pageNumber);
+		System.out.println("totalPages : " +totalPages);
+		System.out.println("startBlockPage2 : " +startBlockPage);
+		System.out.println("endBlockPage2 : " + endBlockPage);
 
 		
 		model.addAttribute("startBlockPage", startBlockPage);
 		model.addAttribute("endBlockPage", endBlockPage);
+		model.addAttribute("pageNumber", pageNumber);
 		model.addAttribute("list",list);
 		return "list";
 	}
+	*/
 	
-	//ajax
-	//@RequestBody를 사용하면 json데이터를 요청했을때 -> java object로 변환해서 받아준다
-	@ResponseBody //view페이지가 아닌 변환값 그대로 클라이언트한테 return 하고 싶은 경우 사용
-	@RequestMapping("/modify")
-	public UserDTO modify(UserDTO dto,Model model) {
-		
-		int id = dto.getId();//dto로 받은 값을 꺼내 id변수에 넣기
-		dto = service.update(id);//update매서드 재활용
-		
-		return dto;
-	}
 
 	
 	

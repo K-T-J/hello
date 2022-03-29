@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,11 +39,12 @@ public class UserService {
 		
 
 	}
-	//수정
-	public UserDTO update(int id) {
+	//유저 한명에 정보 가져오기
+	public UserDTO oneUser(int id) {
 		
-		
-		Optional<UserDTO> dto = UserRe.findById(id);
+		UserDTO dto = UserRe.findById(id).orElseThrow(()->{
+			return new IllegalArgumentException("가져오기 실패");
+		});
 		//findById()메서드는 조회하려는 값이 존재할 수도, 존재하지 않을수도 있어서 		
 		//null에 의한 오류를 최소화 하기 위해 리턴으로 Optional<T>를 받는다
 		/*
@@ -55,14 +57,14 @@ public class UserService {
 						2.현재 Optional의 값이 null인지 확인한다.
 						3.if-else문을 사용하지 않고도 null값 존재 검사를 할 수 있다.
 		*/
-		return UserRe.findById(id).orElseGet(() -> null);
+		return dto;
 		
 		
 		
 	}
-	//테스트 시작
-	@Transactional // 트랜잭션 함수종료시 자동 commit이됨
-	public void testupdate(UserVO vo) {
+	//수정
+	@Transactional // 트랜잭션 함수종료시 자동 commit이됨 / 더티체킹
+	public void update(UserVO vo) {
 		
 		//이때 영속화가 된다
 		UserDTO dto = UserRe.findById(vo.getId()).orElseThrow(()->{//orElseThrow 못찾는다면 어떤 함수를 실행해라 라는뜻이지만 
@@ -76,10 +78,21 @@ public class UserService {
 		
 	}
 	
-	//테스트 끝
+	//삭제
+	public String userDelete(UserDTO dto) {
+		
+		try {
+			UserRe.deleteById(dto.getId()); //db에 없는 id로 삭제를 했을경우 에러가 뜰수 있기때문에 try catch로 작성
+			
+		}catch (EmptyResultDataAccessException e) {
+			return "삭제 실패";
+		}
+		
+		return null; //삭제가 잘 됐을경우 null
+	}
 	
 	
-	//리스트
+	//리스트(페이징)
 	public Page<UserDTO> list(Pageable pageable){
 		
 		Page<UserDTO> list = UserRe.findAll(pageable); //PageRequest.of(0, 0) 페이징 처리를 도와주는 JPA 
@@ -87,24 +100,17 @@ public class UserService {
 		
 		return list;
 	}
-	
 	//테스트 시작
-	public List<UserDTO> testList(){
+	public List<UserDTO> userlist() {
 		
 		List<UserDTO> dto = UserRe.findAll();
 		
 		return dto;
-	}
-
-	public Page<UserDTO> pageList(Pageable pageable){
 		
-		Page<UserDTO> dto =UserRe.findAll(pageable);
-		
-		return dto;
 	}
-	
-	
 	//테스트 끝
+
+	
 
 	
 

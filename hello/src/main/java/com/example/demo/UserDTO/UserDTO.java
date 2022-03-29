@@ -31,7 +31,7 @@ public class UserDTO {
 	@Column(name="id")
 	private int id; //시퀀스, mysql : auto_increment
 	
-	@Column(name="username", nullable = false, length = 30)//null이 될수없고 30자 이내
+	@Column(name="username",unique = true, nullable = false, length = 30)//null이 될수없고 30자 이내
 	private String username; // 아이디
 	
 	@Column(name="password", nullable = false, length = 100)//null이 될수없고 100자 이내 (해쉬 : 암호화)
