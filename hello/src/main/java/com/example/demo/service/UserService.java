@@ -22,7 +22,7 @@ public class UserService {
 	@Autowired //필요한 의존 객체의 타입에 해당하는 빈을 찾아 주입한다. 1.생성자, 2.setter, 3.필드
 	private UserRepository UserRe; 
 	//save()	:레코드 저장 (insert,update)
-	//findOne()	:primary key로 레코드 한건 찾기
+	//findBy()	:레코드 한건 찾기 
 	//findAll()	:전체 레코드 불러오기, 정렬(sort), 페이징(pageable)가능
 	//count()	:레코드 갯수
 	//delete()	:레코드 삭제
@@ -42,7 +42,7 @@ public class UserService {
 	//유저 한명에 정보 가져오기
 	public UserDTO oneUser(int id) {
 		
-		UserDTO dto = UserRe.findById(id).orElseThrow(()->{
+		UserDTO dto = UserRe.findById(id).orElseThrow(()->{ //람다식
 			return new IllegalArgumentException("가져오기 실패");
 		});
 		//findById()메서드는 조회하려는 값이 존재할 수도, 존재하지 않을수도 있어서 		
@@ -100,15 +100,6 @@ public class UserService {
 		
 		return list;
 	}
-	//테스트 시작
-	public List<UserDTO> userlist() {
-		
-		List<UserDTO> dto = UserRe.findAll();
-		
-		return dto;
-		
-	}
-	//테스트 끝
 
 	
 

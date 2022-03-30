@@ -9,13 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data //getter setter
@@ -42,14 +38,6 @@ public class UserDTO {
 	
 	//@ColumnDefault("'user'")//기본값 user 문자는 중간에 ''로 문자인걸 나타내야함
 	//private String role; //Enum을 쓰는게 좋다 (admin,user,manager 도메인을 줄수있다.) 도메인 : 어떤 범위를 말한다.
-	
-//	@CreationTimestamp //시간이 자동 입력
-//	@Column(name="createDate")
-//	private Timestamp createDate; //시간
-
-	
-	
-	
 	
 
 }
