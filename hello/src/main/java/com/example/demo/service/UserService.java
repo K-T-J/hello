@@ -63,7 +63,7 @@ public class UserService {
 		
 	}
 	//수정
-	@Transactional // 트랜잭션 함수종료시 자동 commit이됨 / 더티체킹
+	@Transactional // 트랜잭션:데이터베이스의 상태를 변환시키는 하나의 논리적기능을 수행  함수종료시 자동 commit이됨 / 더티체킹
 	public void update(UserVO vo) {
 		
 		//이때 영속화가 된다

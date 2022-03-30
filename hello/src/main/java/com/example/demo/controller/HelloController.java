@@ -43,7 +43,7 @@ public class HelloController {
 	@ResponseBody
 	@GetMapping("/userlist")
 	public Map<String, Object> userlist(@PageableDefault(page = 0,size = 3,sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-		//page는 0이 1페이지를뜻함 size는 한페이지에 몇개를보여주는지 sort는 무엇을 기준으로 direction는 정렬
+		//page : 0이 1페이지를뜻함 size : 한페이지에 몇개를보여주는지 sort : 무엇을 기준으로 direction : 정렬 DESC(내림차순)
 		
 		Page<UserDTO> list = service.list(pageable);//페이지를 매개변수에 넣어 몇개를 리턴해올지 구한다.
 		
