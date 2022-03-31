@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url:  jdbc:mysql://localhost:3300/hello?serverTimezone=Asia/Seoul #jdbc:mysql://localhost:(MySQL의 포트번호)/(스키마명)?serverTimezone=Asia/Seoul
+    url:  jdbc:mysql://localhost:3306/hello?serverTimezone=Asia/Seoul #jdbc:mysql://localhost:(MySQL의 포트번호)/(스키마명)?serverTimezone=Asia/Seoul
     username: test # 커넥션명
     password: rlaxowns1 #비밀번호  
     
