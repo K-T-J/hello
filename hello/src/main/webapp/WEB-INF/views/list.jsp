@@ -10,7 +10,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><%-- jquery --%>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> <%-- js --%>
 <script type="text/javascript" src="resources/js/list.js"></script><%--list.js 링크 --%>
-
+<link href="resources/css/list.css" rel="stylesheet"><%--css 링크 --%>
 <script type="text/javascript">
 //페이지 로딩될때
 $(document).ready(function() {
@@ -40,8 +40,10 @@ $(document).ready(function() {
 	<%-- 유저 리스트 --%>
 	<div style="margin-top: 30px">
 		<h2>유저 리스트</h2>
-		<button type="button" class="btn btn-outline-primary" onclick="window.location='/main'">메인</button>
-		<button type="button" class="btn btn-outline-primary" onclick="onSignup()">가입</button>
+		<div style="margin-top: 30px">
+			<button type="button" class="btn btn-outline-primary" onclick="window.location='/main'">메인</button>
+			<button type="button" class="btn btn-outline-primary" onclick="onSignup()">가입</button>
+		</div>	
 	</div>
 	<div id="userlist"></div>
 	

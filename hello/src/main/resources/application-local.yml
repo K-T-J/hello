@@ -1,4 +1,9 @@
+#로컬
 spring:
+  config:
+    activate:
+      on-profile: local #프로필 설정
+      
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver  
     url:  jdbc:mysql://localhost:3300/hello?serverTimezone=Asia/Seoul #jdbc:mysql://localhost:(MySQL의 포트번호)/(스키마명)?serverTimezone=Asia/Seoul

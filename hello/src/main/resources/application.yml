@@ -1,6 +1,36 @@
+#default yml파일
 spring:
   mvc:
     view:
       prefix: /WEB-INF/views/ #controller view 경로설정
       suffix: .jsp
- 
+      
+#.yml파일은  하나의 application.yml을 마치 여러개의 .yml파일을 생성한것과 같이 할 수 있다.
+# --- 구분자를 이용하면된다.
+# spring.profiles.active를 써서 어떤 profile을 사용할지 정할수 있다.      
+# 2.4 이전, 이후 다르다. 2.4이후에는 spring.profiles를 사용하지 않는다 spring.config.activate.on-profile로 설정해줘야한다.
+#spring.profoles.group를 이용해서 여러 프로파일들을 한꺼번에 그룹지어 하나의 프로파일로 만들수 있다.
+
+# ex)
+# spring:
+#   profiles:
+#     group:
+#     "dev" : local,dev 
+#이렇게 작성할시 dev를 실행했을때 local과 dev 파일이 같이 실행되는것 같다.
+
+  profiles:
+    active:
+      - #spring.profiles.active# #활성화 하기 Profiles에 배포할 yml파일명을 적어주면 자동으로 경로 잡아준다.
+#'#spring.profiles.active#'<--경로를 자동으로 잡아준다? 이렇게 작성할경우 arguments에 설정해야 하는것같다.
+
+#arguments 설정 방법
+#servers 톰캣 더블클릭 -> Open launch configuration -> Arguments -> VM arguments에 -Dspring.profiles.active=파일명 작성
+
+
+#war 파일 배포 방법 
+#Run As -> Maven build -> Goals : clean package (프로젝트 클린) -> Profiles (배포할 yml파일명 ex)dev/local) -> 
+#apply -> run -> target폴더에 .war 파일 생성 -> Tomcat/webapps에 .war파일(original말고) 넣고 파일명 ROOT로 변경하기 -> 
+#톰캣 conf/server.xml파일에서 Host태그 안에 context path 설정해주기 ->bin폴더 가서 startup.sh로 톰캣 실행-> 작동되는지 확인
+
+
+

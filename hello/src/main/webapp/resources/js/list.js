@@ -1,12 +1,3 @@
-/*$(function () {
-	
-	test();
-});
-
-function test () {
-	
-}
-*/
 //페이지 실행,이동될때
 function list(data){
 	$.ajax({
@@ -69,11 +60,11 @@ function resultHtml(data){
 	//테이블 시작
 	var html = "<table class='table table-striped'>";
 	html += "<tr>";
-	html += "<td>id</td>";
-	html += "<td>username</td>";
-	html += "<td>password</td>";
-	html += "<td>email</td>";
-	html += "<td>삭제</td>";
+	html += "<td>번호</td>";
+	html += "<td>이름</td>";
+	html += "<td>비밀번호</td>";
+	html += "<td>이메일</td>";
+	html += "<td>탈퇴</td>";
 	html += "</tr>";
 	
 	for(var i in data.list){ //리스트 뿌리기
@@ -83,7 +74,7 @@ function resultHtml(data){
 		html += "<td><a href='javascript:void(0)' onclick='onDisplay("+data.list[i].id+")'>"+data.list[i].username+"</a></td>";//username을 누르면 수정 함수 호출 (id)값을 포함해서 호출
 		html += "<td>"+data.list[i].password+"</td>";
 		html += "<td>"+data.list[i].email+"</td>";
-		html += "<td><button type='button' class='btn btn-outline-primary' onclick='onDelete("+data.list[i].id+")'>"+'삭제'+"</button></td>";//삭제 버튼을 누르면 삭제 함수호출 (id)값을 포함해서 호출
+		html += "<td><button type='button' class='btn btn-outline-primary' onclick='onDelete("+data.list[i].id+")'>"+'탈퇴'+"</button></td>";//삭제 버튼을 누르면 삭제 함수호출 (id)값을 포함해서 호출
 		html += "</tr>";
 	};
 	html += "</table>";

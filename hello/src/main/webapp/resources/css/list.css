@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+table{ 
+	table-layout:fixed
+	word-break
+	break-all
+}
+th, td{
+	text-align: center
+}
